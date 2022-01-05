@@ -1,89 +1,179 @@
-Hatching Triage
-===============
 
-This repository features a command-line client and API for interacting with
-[Hatching Triage](https://tria.ge/), an automated malware analysis sandbox.
+# Usage
 
-Our official command-line and API client is implemented in both Golang as
-well as Python. For a Java library, please see
-[TriageApi by Libra](https://github.com/ThisIsLibra/TriageApi).
 
-## Getting Started
+## triage.Client
 
-### Installing the Go client
+### \_\_init__
+`token`: String
 
-```bash
-$ go get github.com/hatching/triage/go/cmd/triage
-```
+`root_url:` String
+* default: https://api.tria.ge
 
-### Installing the Python client
 
-```bash
-$ pip install hatching-triage
-```
+### submit_sample_file
+`filename`: String
 
-## Setting up authentication
+`file`: File
 
-When you have installed the client, you need to set the API key so it can
-authenticate itself with Triage. You can do so by using the `authenticate`
-subcommand:
+`interactive`: Boolean
+* default: False
 
-```bash
-$ triage authenticate <API key>
-```
+`profiles`: String[]
+* default: []
 
-You can find the API key on your [account page](https://tria.ge/account). Do
-note that you need to have a Researcher account on your user account for a key
-to appear.
+##### Return JSON
+https://tria.ge/docs/cloud-api/samples/#submitting-a-file
 
-## Usage
 
-After installing and authentication, various subcommands are available for
-interacting with the Hatching Triage API. Note that any submitted samples will
-end up in our public cloud, unless otherwise configured, and therefore will
-be accessible by everyone browsing to https://tria.ge/
+### submit_sample_url
+`url`: String
 
-```bash
-$ triage -help
-Usage of triage:
+`interactive`: Boolean
+* default: False
 
-  authenticate [token] [flags]
+`profiles`: String[]
+* default: []
 
-    Stores credentials for Triage.
+##### Return JSON
+https://tria.ge/docs/cloud-api/samples/#submitting-a-url
 
-  submit [url/file] [flags]
+### set_sample_profile
+`sample_id`: String
 
-    Submit a new sample file or URL.
+`profiles`: String[]
 
-  select-profile [sample]
 
-    Interactively lets you select profiles for samples that have been submitted
-    in interactive mode. If an archive file was submitted, you will also be
-    prompted to select the files to analyze from the archive.
+##### Return JSON
+{}
 
-  list [flags]
+### set_sample_profile_automatically
+`sample_id`: String
 
-    Show the latest samples that have been submitted.
+`pick`: String[]
+* default: []
 
-  file [sample] [task] [file] [flags]
+##### Return JSON
+{}
 
-    Download task related files.
+### owned_samples
 
-  archive [sample] [flags]
+`max`: Int
+* default: 20
 
-    Download all task related files as an archive.
+##### Return Paginator
+https://tria.ge/docs/cloud-api/samples/#get-samples
 
-  delete [sample]
+### public_samples
 
-    Delete a sample.
+`max`: Int
+* default: 20
 
-  report [sample] [flags]
+##### Return Paginator
+https://tria.ge/docs/cloud-api/samples/#get-samples
 
-    Query reports for a (finished) analysis.
+### search_samples
 
-  create-profile [flags]
+`query`: String
+`max`: Int
+* default: 20
 
-  delete-profile [flags]
+##### Return Paginator
+https://tria.ge/docs/cloud-api/samples/#get-samples
 
-  list-profiles [flags]
-```
+### sample_by_id
+
+`sample_id`: String
+
+##### Return JSON
+https://tria.ge/docs/cloud-api/samples/#get-samplessampleid
+
+### delete_sample
+
+`sample_id`: String
+
+##### Return JSON
+{}
+
+### static_report
+
+`sample_id`: String
+
+##### Return JSON
+https://tria.ge/docs/cloud-api/samples/#get-samplessampleidreportsstatic
+
+### overview_report
+
+`sample_id`: String
+
+##### Return JSON
+https://tria.ge/docs/cloud-api/samples/#get-samplessampleidoverviewjson
+
+### task_report
+
+`sample_id`: String
+
+`task_id`: String
+
+##### Return JSON
+https://tria.ge/docs/cloud-api/samples/#get-samplessampleidtaskidreport_triagejson
+
+
+### sample_task_file
+
+`sample_id`: String
+
+`task_id`: String
+
+`filename`: String
+
+##### Return binary data
+file contents
+
+### sample_archive_tar
+
+`sample_id`: String
+
+##### Return binary data
+file contents
+
+### sample_archive_zip
+
+`sample_id`: String
+
+##### Return binary data
+file contents
+
+### create_profile
+
+`name`: String
+
+`tags`: String[]
+
+`network`: String[]
+* Either \"internet\", \"drop\" or None
+
+`timeout`: Int
+
+##### Return JSON
+https://tria.ge/docs/cloud-api/profiles/
+
+### delete_profile
+
+`profile_id`: String
+
+##### Return JSON
+{}
+
+### profiles
+
+##### Return Paginator
+https://tria.ge/docs/cloud-api/profiles/
+
+
+### sample_events
+
+`sample_id`: String
+
+##### Return JSON
+https://tria.ge/docs/cloud-api/samples/#get-samplesevents
